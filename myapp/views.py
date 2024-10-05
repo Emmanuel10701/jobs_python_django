@@ -12,14 +12,32 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer
 from .models import Subscription
 from .serializers import SubscriptionSerializer
+from django.core.mail import send_mail
+from django.conf import settings
 
 class SubscriptionView(APIView):
     def post(self, request):
         serializer = SubscriptionSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({'message': 'Subscribed successfully!'}, status=status.HTTP_201_CREATED)
+            subscription = serializer.save()
+
+            # Send notification email
+            subject = 'Subscription Confirmation'
+            message = f'Thank you for subscribing! We have received your email: {subscription.email}'
+            recipient_list = [subscription.email]  # Send to the subscriber
+            try:
+                send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+            except Exception as e:
+                return Response({'message': 'Subscribed successfully, but failed to send email notification.'}, status=status.HTTP_201_CREATED)
+
+            return Response({'message': 'Subscribed successfully! 🎉'}, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        subscriptions = Subscription.objects.all()
+        subscription_list = [{'id': sub.id, 'email': sub.email} for sub in subscriptions]
+        return Response({'subscriptions': subscription_list, 'message': 'We have received your email subscription! Thank you! 😊'}, status=status.HTTP_200_OK)
 
 
 # User registration
@@ -55,18 +73,29 @@ class ContactView(APIView):
             email = serializer.validated_data['email']
             message = serializer.validated_data['message']
 
-            # Send email
+            # Prepare the email to the recipient
             try:
                 send_mail(
                     f"Contact Form Submission from {name}",
                     message,
                     email,  # From email
-                    ['recipient@example.com'],  # To email (change to your recipient)
+                    ['recipient@example.com'],  # Change this to your actual recipient email
                     fail_silently=False,
                 )
-                # Send a confirmation message back to the user
+
+                # Prepare the confirmation email back to the sender
+                confirmation_subject = "We Have Received Your Message!"
+                confirmation_message = f"Thank you, {name}! We have received your message and will get back to you shortly."
+                send_mail(
+                    confirmation_subject,
+                    confirmation_message,
+                    'no-reply@example.com',  # Use a no-reply or your actual sender email
+                    [email],  # Send to the user's email
+                    fail_silently=False,
+                )
+
                 return Response({
-                    "message": f"Thank you, {name}! Your message has been sent successfully."
+                    "message": f"Thank you, {name}! Your message has been sent successfully. 😊"
                 }, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({
@@ -74,4 +103,3 @@ class ContactView(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
