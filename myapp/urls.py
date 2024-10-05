@@ -2,6 +2,10 @@ from django.urls import path
 from .views import RegisterView, CustomTokenObtainPairView, UserListView, UserDetailView
 from .views import ContactView
 from .views import SubscriptionView
+from .views import JobListCreateAPIView, JobDetailAPIView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 
 
@@ -10,6 +14,10 @@ urlpatterns = [
     path('auth/login/', CustomTokenObtainPairView.as_view(), name='login'),
      path('api/contact/', ContactView.as_view(), name='contact'),
     path('subscribe/', SubscriptionView.as_view(), name='subscribe'),
+     path('api/jobs/', JobListCreateAPIView.as_view(), name='job-list-create'),  # List and create
+    path('api/jobs/<int:pk>/', JobDetailAPIView.as_view(), name='job-detail'),  # Retrieve, update, delete
     path('users/', UserListView.as_view(), name='user-list'),
     path('auth/users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

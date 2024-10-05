@@ -15,6 +15,25 @@ from .serializers import SubscriptionSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 
+
+
+from .models import Job
+from .serializers import JobSerializer
+
+# List and Create jobs
+class JobListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+# Retrieve, Update, and Delete a specific job
+class JobDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+
+
+
+    
 class SubscriptionView(APIView):
     def post(self, request):
         serializer = SubscriptionSerializer(data=request.data)

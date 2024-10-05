@@ -2,6 +2,13 @@ from rest_framework import serializers
 from .models import User
 from .models import Subscription
 
+from .models import Job
+
+class JobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Job
+        fields = '__all__'
+
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
