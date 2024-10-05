@@ -1,5 +1,17 @@
 from rest_framework import serializers
 from .models import User
+from .models import Subscription
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ['email']
+
+
+class ContactSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
+    message = serializers.CharField()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
