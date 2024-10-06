@@ -19,7 +19,17 @@ from django.conf import settings
 
 from .models import Job
 from .serializers import JobSerializer
+from .models import Job, Application
+from .serializers import JobSerializer, ApplicationSerializer
 
+class ApplicationListCreateView(generics.ListCreateAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+
+
+class ApplicationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
 # List and Create jobs
 class JobListCreateAPIView(generics.ListCreateAPIView):
     queryset = Job.objects.all()
