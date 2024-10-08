@@ -1,3 +1,4 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -25,6 +26,15 @@ from .serializers import JobSerializer, ApplicationSerializer
 
 
 
+class CustomTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -43,10 +53,8 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 # Custom Token Obtain Pair View for Login
-
 class CustomTokenObtainPairView(TokenObtainPairView):
-    # You can customize the token response here if needed
-    pass # Allow anyone to access this view
+    permission_classes = (AllowAny)  # Allow anyone to access this view
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -58,11 +66,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
-
-
-
-
-
 
 class ApplicationListCreateView(generics.ListCreateAPIView):
     queryset = Application.objects.all()

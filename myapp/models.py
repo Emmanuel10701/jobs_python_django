@@ -1,21 +1,13 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class User(models.Model):
+class User(AbstractUser):
     USER_ROLES = (
         ('client', 'Client'),
         ('freelancer', 'Freelancer'),
     )
-
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)  # Store hashed passwords in production
     role = models.CharField(max_length=10, choices=USER_ROLES)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'role'] 
-    
-    def __str__(self):
-        return self.username
 
 
 class Subscription(models.Model):
