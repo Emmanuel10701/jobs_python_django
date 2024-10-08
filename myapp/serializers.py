@@ -37,3 +37,4 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.save()
         return user
+

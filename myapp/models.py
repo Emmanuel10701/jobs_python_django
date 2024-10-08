@@ -11,6 +11,9 @@ class User(models.Model):
     password = models.CharField(max_length=128)  # Store hashed passwords in production
     role = models.CharField(max_length=10, choices=USER_ROLES)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'role'] 
+    
     def __str__(self):
         return self.username
 

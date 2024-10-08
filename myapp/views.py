@@ -22,6 +22,48 @@ from .serializers import JobSerializer
 from .models import Job, Application
 from .serializers import JobSerializer, ApplicationSerializer
 
+
+
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+# List all users
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+# Get, Update, and Delete a single user
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+# Custom Token Obtain Pair View for Login
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # You can customize the token response here if needed
+    pass # Allow anyone to access this view
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        refresh = self.get_token(user)
+
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        })
+
+
+
+
+
+
 class ApplicationListCreateView(generics.ListCreateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
@@ -70,28 +112,6 @@ class SubscriptionView(APIView):
 
 
 # User registration
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
-
-# List all users
-class UserListView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
-
-# Get, Update, and Delete a single user
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
-
-# Custom Token Obtain Pair View for Login
-class CustomTokenObtainPairView(TokenObtainPairView):
-        permission_classes = [AllowAny]
-
-
 
 
 class ContactView(APIView):
