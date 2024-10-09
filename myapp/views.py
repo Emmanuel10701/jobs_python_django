@@ -10,6 +10,65 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.views import APIView
 
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+from django.http import JsonResponse
+from django.contrib.auth.tokens import default_token_generator
+from rest_framework.views import APIView
+from .models import User
+
+class ForgotPasswordView(APIView):
+    permission_classes = [AllowAny]  # Ensure anyone can access this
+
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return JsonResponse({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User with this email does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate token and UID
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        # Generate reset password URL
+        reset_url = f"http://localhost:5173/reset-password/{uid}/{token}/"
+
+        try:
+            # Send password reset email
+            send_mail(
+                'Password Reset',
+                f'Click the following link to reset your password: {reset_url}',
+                settings.EMAIL_HOST_USER,  # Use the configured email host user
+                [email],
+                fail_silently=False,
+            )
+            return JsonResponse({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Failed to send email: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_url = f"http://localhost:5173/reset-password/{uid}/{token}/"
+            send_mail(
+                'Password Reset',
+                f'Click the following link to reset your password: {reset_url}',
+                'noreply@example.com',
+                [email],
+            )
+            return JsonResponse({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User with this email does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]  # Allow anyone to access this view

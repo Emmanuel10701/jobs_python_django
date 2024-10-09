@@ -16,11 +16,17 @@ from rest_framework_simplejwt.views import TokenRefreshView  # JWT views for log
 from django.conf import settings
 from django.conf.urls.static import static
 
+from .views import ForgotPasswordView
+
+
+
 urlpatterns = [
     # Authentication
     path('auth/register/', RegisterView.as_view(), name='register'),
     path('auth/login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+#forgot pasword 
+    path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
 
     # Users
     path('users/', UserListView.as_view(), name='user-list'),
