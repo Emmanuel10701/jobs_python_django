@@ -1,6 +1,14 @@
 from rest_framework import serializers
 from .models import User, Subscription, Job, Application,Contact
+from .models import FreelancerProfile
 
+
+from .models import ClientProfile
+
+class ClientProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClientProfile
+        fields = '__all__'
 # Serializer for the User model with only required fields
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,17 +42,20 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = ['id', 'email']
 
 # Serializer for the Job model
-class JobSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+from rest_framework import serializers
+from .models import Job
 
+class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = [
-            'id', 'user', 'job_title', 'company_name', 'email', 'mobile', 
-            'description', 'requirements', 'salary', 'logo', 
-            'location', 'work_type', 'created_at'
-        ]
+        fields = '__all__'
 
+
+
+class FreelancerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FreelancerProfile
+        fields = '__all__'  # Adjust fields as necessary       
 # Serializer for the Application model
 class ApplicationSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)

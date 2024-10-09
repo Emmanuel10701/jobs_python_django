@@ -28,6 +28,51 @@ from rest_framework.response import Response
 from django.utils.encoding import force_str
 
 
+from rest_framework import generics, permissions
+from .models import FreelancerProfile
+from .serializers import FreelancerProfileSerializer
+
+# views.py
+from rest_framework.permissions import IsAuthenticated
+from .models import ClientProfile
+from .serializers import ClientProfileSerializer
+
+class ClientProfileCreateView(generics.CreateAPIView):
+    queryset = ClientProfile.objects.all()
+    serializer_class = ClientProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+class ClientProfileRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = ClientProfile.objects.all()
+    serializer_class = ClientProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class FreelancerProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        profile = FreelancerProfile.objects.get(user=request.user)
+        serializer = FreelancerProfileSerializer(profile)
+        return Response(serializer.data)
+
+    def put(self, request):
+        profile = FreelancerProfile.objects.get(user=request.user)
+        serializer = FreelancerProfileSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    def post(self, request):
+        serializer = FreelancerProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+
 class ResetPasswordConfirmView(APIView):
     permission_classes = [AllowAny]  # Allow anyone to access this view
 

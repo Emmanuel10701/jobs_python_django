@@ -18,6 +18,9 @@ from django.conf.urls.static import static
 
 from .views import ForgotPasswordView
 from .views import ResetPasswordConfirmView
+from .views import FreelancerProfileView
+from .views import ClientProfileCreateView, ClientProfileRetrieveUpdateView
+
 
 
 
@@ -30,6 +33,13 @@ urlpatterns = [
 #forgot pasword 
     path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('reset-password-confirm/<uidb64>/<token>/', ResetPasswordConfirmView.as_view(), name='reset-password-confirm'),
+
+#freelacer 
+    path('freelancer/profile/', FreelancerProfileView.as_view(), name='freelancer-profile'),
+
+    #client
+     path('api/client/profile/', ClientProfileCreateView.as_view(), name='client-profile-create'),
+    path('api/client/profile/<int:pk>/', ClientProfileRetrieveUpdateView.as_view(), name='client-profile-detail'),
 
 
     # Users

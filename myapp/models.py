@@ -59,26 +59,36 @@ class Subscription(models.Model):
         return self.email
 
 class Job(models.Model):
+    WORK_TYPE_CHOICES = [
+        ('remote', 'Remote'),
+        ('site', 'Site'),
+        ('contract', 'Contract'),
+        ('temporary', 'Temporary'),
+        ('permanent', 'Permanent'),
+    ]
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
     job_title = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
     email = models.EmailField()
-    mobile = models.CharField(max_length=20)
+    mobile = models.CharField(max_length=15)
+    location = models.CharField(max_length=255)
     description = models.TextField()
     requirements = models.TextField()
     salary = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to='logos/', blank=True, null=True)
-    location = models.CharField(max_length=100)
-    work_type = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True)
+    logo = models.ImageField(upload_to='job_logos/', null=True, blank=True)
+    work_type = models.CharField(max_length=10, choices=WORK_TYPE_CHOICES)
+    work_details = models.TextField() 
+    created_at =models.DateTimeField(auto_now_add=True, null=True) # Add this line
 
-    class Meta:
-        verbose_name = "Job"
-        verbose_name_plural = "Jobs"
-        ordering = ['created_at']
 
-    def __str__(self):
-        return self.job_title
+
+
+class Meta:
+    verbose_name = 'Job Posting'
+    verbose_name_plural = 'Job Postings'
+def __str__(self):
+    return f"{self.job_title} at {self.company_name}"
 
 class Contact(models.Model):
     name = models.CharField(max_length=100)
@@ -104,3 +114,31 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.applicant_name} applied for {self.job.job_title}"
+class FreelancerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='freelancer_profile')
+    full_name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=15)
+    nationality = models.CharField(max_length=50)
+    address = models.TextField()
+    education = models.TextField()
+    skills = models.JSONField(default=list)
+    resume = models.FileField(upload_to='resumes/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+
+    def __str__(self):
+        return self.full_name
+
+
+class ClientProfile(models.Model):
+    company_name = models.CharField(max_length=255)
+    contact_name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=20)
+    address = models.TextField()
+    project_description = models.TextField()
+    budget = models.DecimalField(max_digits=10, decimal_places=2)
+    profile_image = models.ImageField(upload_to='profiles/', null=True, blank=True)
+
+    def __str__(self):
+        return self.company_name
