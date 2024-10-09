@@ -1,29 +1,14 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User
-from rest_framework import status
-from .serializers import ContactSerializer
-from django.core.mail import send_mail
-from rest_framework.views import APIView
-
-from .serializers import UserSerializer
-from .models import Subscription
-from .serializers import SubscriptionSerializer
+from .models import User, Subscription, Job, Application
+from .serializers import UserSerializer, SubscriptionSerializer, JobSerializer, ApplicationSerializer,ContactSerializer
 from django.core.mail import send_mail
 from django.conf import settings
-
-
-
-from .models import Job
-from .serializers import JobSerializer
-from .models import Job, Application
-from .serializers import JobSerializer, ApplicationSerializer
-
-
+from rest_framework.views import APIView
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -40,56 +25,50 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+
 # List all users
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+
 # Get, Update, and Delete a single user
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # Changed to AllowAny
 
-# Custom Token Obtain Pair View for Login
-class CustomTokenObtainPairView(TokenObtainPairView):
-    permission_classes = (AllowAny)  # Allow anyone to access this view
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        refresh = self.get_token(user)
-
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
 
 class ApplicationListCreateView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
 
 
 class ApplicationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+
+
 # List and Create jobs
 class JobListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+
 
 # Retrieve, Update, and Delete a specific job
 class JobDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
     queryset = Job.objects.all()
     serializer_class = JobSerializer
 
 
-
-
-    
 class SubscriptionView(APIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
+
     def post(self, request):
         serializer = SubscriptionSerializer(data=request.data)
         if serializer.is_valid():
@@ -114,10 +93,9 @@ class SubscriptionView(APIView):
         return Response({'subscriptions': subscription_list, 'message': 'We have received your email subscription! Thank you! 😊'}, status=status.HTTP_200_OK)
 
 
-# User registration
-
-
 class ContactView(APIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
+
     def post(self, request):
         serializer = ContactSerializer(data=request.data)
         if serializer.is_valid():
