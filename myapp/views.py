@@ -18,6 +18,46 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework.views import APIView
 from .models import User
 
+
+
+
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils.encoding import force_str
+
+
+class ResetPasswordConfirmView(APIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this view
+
+    def post(self, request, uidb64, token):
+        try:
+            # Decode the uid and find the corresponding user
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+
+            # Check if the token is valid
+            if not default_token_generator.check_token(user, token):
+                return Response({'error': 'Invalid token or token has expired.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Get new password from request
+            new_password = request.data.get('new_password')
+            confirm_password = request.data.get('confirm_password')
+
+            if new_password != confirm_password:
+                return Response({'error': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Set new password
+            user.set_password(new_password)
+            user.save()
+
+            return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
+
+        except (User.DoesNotExist, ValueError):
+            return Response({'error': 'Invalid request or user does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ForgotPasswordView(APIView):
     permission_classes = [AllowAny]  # Ensure anyone can access this
 
