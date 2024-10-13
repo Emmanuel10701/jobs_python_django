@@ -4,43 +4,41 @@ from .views import (
     UserListView,
     UserDetailView,
     ContactView,
-    SubscriptionView,     
+    SubscriptionView,
     CustomTokenObtainPairView,
     JobListCreateAPIView,
     JobDetailAPIView,
     ApplicationListCreateView,
-    ApplicationDetailView
+    ApplicationDetailView,
+    ForgotPasswordView,
+    PasswordResetView,
+    ResetPasswordConfirmView,
+    FreelancerProfileView,
+    ClientProfileCreateView,
+    ClientProfileRetrieveUpdateView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView  # JWT views for login and token refresh
 
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import ForgotPasswordView
-from .views import ResetPasswordConfirmView
-from .views import FreelancerProfileView
-from .views import ClientProfileCreateView, ClientProfileRetrieveUpdateView
-
-
-
-
-
 urlpatterns = [
-    # Authentication
+    # Authentication URLs
     path('auth/register/', RegisterView.as_view(), name='register'),
     path('auth/login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-#forgot pasword 
-    path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
-    path('reset-password-confirm/<uidb64>/<token>/', ResetPasswordConfirmView.as_view(), name='reset-password-confirm'),
 
-#freelacer 
+    # Forgot Password
+    path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
+    path('api/password-reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('api/reset-password/<str:uidb64>/<str:token>/', ResetPasswordConfirmView.as_view(), name='password_reset_confirm'),
+
+    # Freelancer Profile
     path('freelancer/profile/', FreelancerProfileView.as_view(), name='freelancer-profile'),
 
-    #client
-     path('api/client/profile/', ClientProfileCreateView.as_view(), name='client-profile-create'),
+    # Client Profile
+    path('api/client/profile/', ClientProfileCreateView.as_view(), name='client-profile-create'),
     path('api/client/profile/<int:pk>/', ClientProfileRetrieveUpdateView.as_view(), name='client-profile-detail'),
-
 
     # Users
     path('users/', UserListView.as_view(), name='user-list'),
@@ -54,7 +52,7 @@ urlpatterns = [
     path('api/contact/', ContactView.as_view(), name='contact'),
     path('subscribe/', SubscriptionView.as_view(), name='subscribe'),
 
-    # Jobs
+    # Job Listings
     path('api/jobs/', JobListCreateAPIView.as_view(), name='job-list-create'),  # List and create jobs
     path('api/jobs/<int:pk>/', JobDetailAPIView.as_view(), name='job-detail'),  # Retrieve, update, delete specific job
 ]

@@ -103,7 +103,7 @@ class Application(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
     applicant_name = models.CharField(max_length=150)
     applicant_email = models.EmailField()
-    cover_letter = models.FileField(upload_to='cover_letters/', blank=True, null=True)
+    cover_letter = models.FileField(upload_to='cover_letters/', null=True)
     proposal = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
