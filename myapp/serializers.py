@@ -5,6 +5,15 @@ from .models import FreelancerProfile
 
 from .models import ClientProfile
 
+# serializers.py
+from rest_framework import serializers
+
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True, min_length=8)
+
+
+
+
 class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientProfile
@@ -58,15 +67,15 @@ class FreelancerProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'  # Adjust fields as necessary       
 # Serializer for the Application model
 class ApplicationSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    job = JobSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True)
+    job = serializers.PrimaryKeyRelatedField(queryset=Job.objects.all(), required=True)
 
     class Meta:
         model = Application
-        fields = [
-            'id', 'user', 'job', 'applicant_name', 'applicant_email', 
-            'cover_letter', 'proposal', 'created_at'
-        ]
+        fields = '__all__'  # This will include all fields in the model
+        read_only_fields = ['id', 'created_at']
+
+        
 # Contact Serializer
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:

@@ -11,13 +11,12 @@ from .views import (
     ApplicationListCreateView,
     ApplicationDetailView,
     ForgotPasswordView,
-    PasswordResetView,
     ResetPasswordConfirmView,
     FreelancerProfileView,
     ClientProfileCreateView,
     ClientProfileRetrieveUpdateView,
 )
-from rest_framework_simplejwt.views import TokenRefreshView  # JWT views for login and token refresh
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -28,10 +27,9 @@ urlpatterns = [
     path('auth/login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    # Forgot Password
+    # Password Reset
     path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
-    path('api/password-reset/', PasswordResetView.as_view(), name='password_reset'),
-    path('api/reset-password/<str:uidb64>/<str:token>/', ResetPasswordConfirmView.as_view(), name='password_reset_confirm'),
+    path('auth/reset-password/<str:uidb64>/<str:token>/', ResetPasswordConfirmView.as_view(), name='password_reset_confirm'),
 
     # Freelancer Profile
     path('freelancer/profile/', FreelancerProfileView.as_view(), name='freelancer-profile'),
@@ -53,10 +51,9 @@ urlpatterns = [
     path('subscribe/', SubscriptionView.as_view(), name='subscribe'),
 
     # Job Listings
-    path('api/jobs/', JobListCreateAPIView.as_view(), name='job-list-create'),  # List and create jobs
-    path('api/jobs/<int:pk>/', JobDetailAPIView.as_view(), name='job-detail'),  # Retrieve, update, delete specific job
+    path('api/jobs/', JobListCreateAPIView.as_view(), name='job-list-create'),
+    path('api/jobs/<int:pk>/', JobDetailAPIView.as_view(), name='job-detail'),
 ]
 
-# Static and media files handling in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
