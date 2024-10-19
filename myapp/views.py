@@ -109,16 +109,17 @@ class JobDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
 
 # Application Views
+# Application Views with Authentication
 class ApplicationListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
 
+
 class ApplicationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-
 # Subscription Views
 class SubscriptionView(APIView):
     permission_classes = [permissions.AllowAny]

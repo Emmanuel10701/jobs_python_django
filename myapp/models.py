@@ -106,6 +106,8 @@ class Application(models.Model):
     cover_letter = models.FileField(upload_to='cover_letters/', null=True)
     proposal = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    company_name = models.CharField(max_length=255, blank=True)
+
 
     class Meta:
         verbose_name = "Application"
@@ -114,6 +116,9 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.applicant_name} applied for {self.job.job_title}"
+    
+
+    
 class FreelancerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='freelancer_profile')
     full_name = models.CharField(max_length=255)
