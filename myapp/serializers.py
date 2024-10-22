@@ -84,3 +84,8 @@ class ContactSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Contact.objects.create(**validated_data)
+    
+    
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
