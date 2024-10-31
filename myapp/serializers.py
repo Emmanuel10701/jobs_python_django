@@ -1,23 +1,22 @@
 from rest_framework import serializers
 from .models import User, Subscription, Job, Application,Contact
 from .models import FreelancerProfile
-
-
 from .models import ClientProfile
 
 # serializers.py
+
 from rest_framework import serializers
 
 class ResetPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True, min_length=8)
 
 
-
-
 class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientProfile
         fields = '__all__'
+
+
 # Serializer for the User model with only required fields
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}  # To ensure password is write-only and not included in responses
         }
+
 
     # Hash the password when creating a new user
     def create(self, validated_data):
@@ -85,7 +85,7 @@ class ContactSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Contact.objects.create(**validated_data)
     
-    
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()

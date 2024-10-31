@@ -1,0 +1,16 @@
+GET  http://127.0.0.1:8000/api/api/jobs/
+Content-Type: application/json
+
+{
+    "job_title": "Business Analyst",
+    "company_name": "Smart Solutions",
+    "email": "jobs@smartsolutions.com",
+    "mobile": "777-888-9999",
+    "location": "Chicago, IL",
+    "description": "We are seeking a Business Analyst to analyze business needs and propose solutions.",
+    "requirements": "- Experience in business analysis or a related field\n- Strong communication and presentation skills\n- Ability to work with stakeholders to define requirements",
+    "salary": "85000",
+    "work_type": "site",
+    "work_details": "You will facilitate workshops and meetings to gather and document requirements for projects.",
+    "user": 2
+}
