@@ -44,9 +44,11 @@ class ResetPasswordConfirmView(APIView):
 
     def post(self, request, uidb64, token):
         try:
+            # Decode the UID from base64
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
 
+            # Check the token validity
             if not default_token_generator.check_token(user, token):
                 return Response({'error': 'Invalid token or token has expired.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -59,17 +61,18 @@ class ResetPasswordConfirmView(APIView):
             if new_password != confirm_password:
                 return Response({'error': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Set the new password and save the user
             user.set_password(new_password)
             user.save()
 
             return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
 
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, OverflowError):
             return Response({'error': 'Invalid UID.'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Token Authentication View
 class CustomTokenObtainPairView(TokenObtainPairView):
