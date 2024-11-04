@@ -42,11 +42,9 @@ class ForgotPasswordView(APIView):
 class ResetPasswordConfirmView(APIView):
     permission_classes = [permissions.AllowAny]
 
-    def post(self, request, uidb64, token):
+    def post(self, request, user_id, token):
         try:
-            # Decode the UID from base64
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
+            user = User.objects.get(pk=user_id)
 
             # Check the token validity
             if not default_token_generator.check_token(user, token):
@@ -67,14 +65,10 @@ class ResetPasswordConfirmView(APIView):
 
             return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
 
-        except (ValueError, TypeError, OverflowError):
-            return Response({'error': 'Invalid UID.'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-# Token Authentication View
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
 

@@ -1,14 +1,6 @@
-GEt  http://127.0.0.1:8000/api/api/jobs/
+POST http://127.0.0.1:8000/api/auth/forgot-password/
 Content-Type: application/json
 
-
 {
-    "user": 2,
-    "job": 4,
-    "applicant_name": "John Doe",
-    "applicant_email": "john.doe@example.com",
-    "proposal": "I am very interested in this position and believe my skills align well.",
-    "company_name": "Default Company"
+    "email": "emmanuelmakau90@gmail.com"
 }
-
-
