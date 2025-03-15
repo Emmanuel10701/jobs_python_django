@@ -1,4 +1,4 @@
-# **Job Platform 📋**
+ # **Job Platform 📋**
 [**Live Demo**](https://jobs-frontent-react.vercel.app/)
 
 ## Overview  
@@ -13,7 +13,7 @@ This project is a **Job Platform** designed to connect job seekers and employers
 
 ## Features 🚀  
 
-### Job Seekers  
+### **Job Seekers**  
 1. **Search and Filter Jobs**  
    - Find jobs based on keywords, location, and categories.  
 
@@ -23,7 +23,15 @@ This project is a **Job Platform** designed to connect job seekers and employers
 3. **Application Tracking**  
    - View application statuses and respond to employer messages.  
 
-### Employers  
+4. **Job Alerts & Notifications**  
+   - Get real-time notifications for new job postings.  
+
+5. **Resume Builder**  
+   - Create a resume directly within the platform.  
+
+---
+
+### **Employers**  
 1. **Post Job Listings**  
    - Create job postings with detailed requirements.  
 
@@ -33,15 +41,23 @@ This project is a **Job Platform** designed to connect job seekers and employers
 3. **Communicate with Applicants**  
    - Contact candidates for interviews or follow-ups.  
 
-### Admins  
+4. **Company Profiles**  
+   - Showcase company information and attract top talent.  
+
+---
+
+### **Admins**  
 1. **Dashboard**  
    - Monitor site usage, job postings, and user activities.  
 
 2. **User Management**  
    - Approve or revoke access for job seekers and employers.  
 
-3. **Reports**  
+3. **Reports & Analytics**  
    - Generate platform analytics and financial statistics.  
+
+4. **Fraud Detection**  
+   - Detect and prevent spam or fraudulent job listings.  
 
 ---
 
@@ -50,6 +66,7 @@ This project is a **Job Platform** designed to connect job seekers and employers
 - **Backend**: Django REST Framework for API development.  
 - **Frontend**: React and Tailwind CSS for a dynamic and responsive UI.  
 - **Database**: MySQL for reliable and scalable data management.  
+- **Authentication**: JWT for secure user authentication.  
 - **Styling**: Tailwind CSS for modern design.  
 - **Hosting**: Vercel for fast and seamless deployment.  
 
@@ -57,7 +74,7 @@ This project is a **Job Platform** designed to connect job seekers and employers
 
 ## How It Works 🛠  
 
-### Job Seekers  
+### **Job Seekers**  
 1. **Sign Up or Login**  
    - Create an account or log in to access job opportunities.  
 
@@ -67,7 +84,12 @@ This project is a **Job Platform** designed to connect job seekers and employers
 3. **Apply for Jobs**  
    - Submit applications directly from the platform.  
 
-### Employers  
+4. **Manage Applications**  
+   - Track job application status and receive notifications.  
+
+---
+
+### **Employers**  
 1. **Sign Up or Login**  
    - Create an employer account or log in to access the dashboard.  
 
@@ -77,10 +99,14 @@ This project is a **Job Platform** designed to connect job seekers and employers
 3. **Review Applications**  
    - Manage candidate applications and communicate with potential hires.  
 
+4. **Hire Candidates**  
+   - Schedule interviews and finalize hiring decisions.  
+
 ---
 
 ## Setup and Installation 💾  
 
+### **Frontend**  
 1. Clone the repository:  
    ```bash
    git clone https://github.com/Emmanuel10701/jobs_python_django.git
@@ -104,12 +130,71 @@ This project is a **Job Platform** designed to connect job seekers and employers
 
 ---
 
+### **Backend**  
+1. Install dependencies:  
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run database migrations:  
+   ```bash
+   python manage.py migrate
+   ```
+
+3. Start the Django server:  
+   ```bash
+   python manage.py runserver
+   ```
+
+4. API available at:  
+   ```
+   http://127.0.0.1:8000/api/
+   ```
+
+---
+
+## API Endpoints 📡  
+
+| Method | Endpoint | Description |
+|--------|---------|-------------|
+| GET | /api/jobs/ | Get all job listings |
+| GET | /api/jobs/{id}/ | Get a single job by ID |
+| POST | /api/jobs/ | Create a new job listing (Employer) |
+| PUT | /api/jobs/{id}/ | Update job details (Employer) |
+| DELETE | /api/jobs/{id}/ | Delete a job listing (Admin/Employer) |
+| POST | /api/auth/register/ | User registration |
+| POST | /api/auth/login/ | User login |
+
+---
+
+## Deployment 🌍  
+- **Frontend:** Vercel (Automatic deployment on push to `main` branch).  
+- **Backend:** Deployed on AWS EC2 / DigitalOcean (Configurable based on project requirements).  
+
+---
+
 ## Contributions 🤝  
 
-Feel free to fork this repository and submit pull requests. Suggestions and feedback are always welcome!  
+Contributions are welcome! If you find a bug or want to add new features, feel free to submit a pull request.  
+
+### **How to Contribute?**  
+1. Fork the repository.  
+2. Create a new branch (`git checkout -b feature-branch`).  
+3. Commit changes (`git commit -m 'Added a new feature'`).  
+4. Push to the branch (`git push origin feature-branch`).  
+5. Open a pull request.  
 
 ---
 
 ## License 📜  
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is open-source and available under the [MIT License](LICENSE).  
+
+---
+
+## Contact 📧  
+If you have any questions or feedback, feel free to reach out:  
+📩 **Email**: emmanuelmakau90@gmail.com  
+🔗 **GitHub**: [Emmanuel10701](https://github.com/Emmanuel10701)  
+🚀 **Live Demo**: [Job Platform](https://jobs-frontent-react.vercel.app/)
+
